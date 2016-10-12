@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Predica.Costkiller.Core", "Predica.Costkiller.Core.csproj", "{493079F8-E885-4FC7-B20D-841D0F1A611A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug-PROD|Any CPU = Debug-PROD|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Release-PROD|Any CPU = Release-PROD|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{493079F8-E885-4FC7-B20D-841D0F1A611A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{493079F8-E885-4FC7-B20D-841D0F1A611A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{493079F8-E885-4FC7-B20D-841D0F1A611A}.Debug-PROD|Any CPU.ActiveCfg = Debug-PROD|Any CPU
+		{493079F8-E885-4FC7-B20D-841D0F1A611A}.Debug-PROD|Any CPU.Build.0 = Debug-PROD|Any CPU
+		{493079F8-E885-4FC7-B20D-841D0F1A611A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{493079F8-E885-4FC7-B20D-841D0F1A611A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{493079F8-E885-4FC7-B20D-841D0F1A611A}.Release-PROD|Any CPU.ActiveCfg = Release-PROD|Any CPU
+		{493079F8-E885-4FC7-B20D-841D0F1A611A}.Release-PROD|Any CPU.Build.0 = Release-PROD|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
