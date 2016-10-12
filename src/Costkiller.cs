@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
@@ -15,7 +13,6 @@ using Predica.Costkiller.Core.Model.Entities.CostkillerXml;
 using Predica.Costkiller.Core.Model.Entities.CostkillerXml.document;
 using Predica.Costkiller.Core.Model.Enums;
 using Predica.Costkiller.Core.Model.Exceptions;
-using Predica.Costkiller.Core.Model.Interfaces;
 using Predica.Costkiller.Core.Model.Requests;
 using Predica.Costkiller.Core.Model.Responses;
 
@@ -28,22 +25,39 @@ namespace Predica.Costkiller.Core
     {
 
         #region Constructors
+        /// <summary>
+        /// Creates an empty Costkiller object
+        /// </summary>
         public Costkiller()
         {
 
         }
+        /// <summary>
+        /// Creates a Costkiller object
+        /// </summary>
+        /// <param name="address">Address of the instance you are connecting to. Most likely - http://portal.costkiller.pl/"</param>
+        /// <param name="apiKey">API Key found in CostKiller web portal</param>
+        /// <param name="companyId">Company's ID</param>
         public Costkiller(string address, string apiKey, int companyId)
             : this(new Uri(address), apiKey, companyId)
         {
             //Overload with new Uri(address)
         }
+        /// <summary>
+        /// Creates a Costkiller object
+        /// </summary>
+        /// <param name="address">Address of the instance you are connecting to. Most likely - http://portal.costkiller.pl/"</param>
+        /// <param name="apiKey">API Key found in CostKiller web portal</param>
+        /// <param name="companyId">Company's ID</param>
         public Costkiller(Uri address, string apiKey, int companyId)
         {
             _address = address;
             _apiKey = apiKey;
             _companyId = companyId;
         }
-
+        /// <summary>
+        /// Creates a Costkiler object using settings from ConfigStore
+        /// </summary>
         public Costkiller(ConfigStore confgStore) :
             this(confgStore.Address, confgStore.ApiKey, confgStore.CompanyId)
         {
@@ -58,7 +72,9 @@ namespace Predica.Costkiller.Core
         private string _apiKey = null;
         private readonly int _companyId;
         private const string DateTimeFormat = "yyyy-MM-dd";
-        //Setting this option to false will enable special HttpClient features like counting requests, etc.
+        /// <summary>
+        /// Setting this option to true will disable special HttpClient features like counting requests, etc.
+        /// </summary>
         private const bool IsBareboneClient = false;
         #endregion
 
@@ -122,17 +138,17 @@ namespace Predica.Costkiller.Core
 
         #region Budget Lines
         /// <summary>
-        /// Creates all budget lines combinations for a project
+        /// Will create all budget lines combinations (of Cost origin / line of business) for given project symbol
         /// </summary>
-        /// <param name="projectName">Costkiller symbol</param>
-        /// <returns>Progress 0...100 in percents</returns>
-        public IEnumerable<double> AddBudgetLines(string projectName)
+        /// <param name="projectName">Costkiller's symbol</param>
+        public async Task AddBudgetLines(string projectName)
         {
             const string method = "CK_API_BUDGET_SYMBOL_ADD";
             if (projectName.Length > 45)
                 throw new ArgumentOutOfRangeException(nameof(projectName), projectName, "Project name cannot be longer than 45 characters");
-            int totalRequests = Config.DataSource.CostOrigins.Count * Config.DataSource.LineOfBusinesses.Count;
-            double requestsProcessed = 0;
+            if (Config.DataSource == null)
+                throw new ArgumentNullException(nameof(Config.DataSource), "Config.DataStore is null. Please set your IDataSource before adding budget lines.");
+
             foreach (var costOrigin in Config.DataSource.CostOrigins)
             {
                 foreach (var lineOfBusiness in Config.DataSource.LineOfBusinesses)
@@ -141,42 +157,26 @@ namespace Predica.Costkiller.Core
                     var budgetLine = new NewBudgetLine(_companyId, lineOfBusiness, costOrigin, tempProject, String.Empty);
 
                     string payload = budgetLine.ToXmlString();
-                    var response = Client.GetAsync(GetUrl(method, payload)).Result;
-                    var xmlResponse = response.Content.ReadAsAsync<BaseResponse>().Result;
-                    if (xmlResponse.success)
+                    var response = await Client.GetAsync(GetUrl(method, payload));
+                    var xmlResponse = await response.Content.ReadAsAsync<BaseResponse>();
+                    if (xmlResponse.success == false)
                     {
-                        requestsProcessed++;
-                        yield return requestsProcessed / totalRequests * 100; //Progress in percents
-                    }
-                    else
-                    {
-                        //Ignore zdublowany
-                        if (!xmlResponse.error.Contains("zdublowany"))
-                            throw new CostkillerException(xmlResponse, response.RequestMessage);
+                        //Ignore zdublowany error
+                        if (xmlResponse.error.Contains("zdublowany"))
+                            continue;
+                        throw new CostkillerException(xmlResponse, response.RequestMessage);
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Creates all project lines for a project without returning progress 
-        /// </summary>
-        /// <param name="projectName">Project code (CRM) or symbol (CK)</param>
-        public void AddBudgetLinesSilent(string projectName)
-        {
-            foreach (var progress in AddBudgetLines(projectName))
-            {
-                ;
             }
         }
         #endregion
 
         #region Documents
         /// <summary>
-        /// Get single document
+        /// Gets single document
         /// </summary>
         /// <param name="id">Document ID</param>
-        /// <returns></returns>
+        /// <returns>Document object</returns>
         public async Task<Document> GetDocuments(int id)
         {
             const string method = "CK_API_DOC_GET";
@@ -319,13 +319,6 @@ namespace Predica.Costkiller.Core
 
         #region Util Methods
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="response"></param>
-        /// <param name="arrayRootName"></param>
-        /// <returns></returns>
         private async Task<T> ReadXml<T>(HttpResponseMessage response, string arrayRootName)
         {
             var xml = await response.Content.ReadAsStringAsync();
