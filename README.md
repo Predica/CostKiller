@@ -18,7 +18,19 @@ This library helps you use CostKiller API from .NET project
 
 ## How to use
 
-
+```csharp
+    //Creating CostKiller object
+    using Predica.CostkillerLib;
+    ...
+    var costkiller = new Costkiller(new ConfigStore("Address=http://prod.costkiller.pl/;ApiKey=XXXXXXX;CompanyId=XXX;"));
+    var costkiller2 = new Costkiller("http://prod.costkiller.pl/", "XXXXXXX", 123);
+    //Searching documents
+    var documents = costkiller.SearchDocuments();
+    //Adding budget lines
+    // - FirstYour assign your object that implements IDataSource
+    costkiller.DataSource = new MyDataSource(); 
+    costkiller.AddBudgetLines("MyProject");
+```
 
 #### Future plans
 
