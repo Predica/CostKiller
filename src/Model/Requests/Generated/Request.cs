@@ -1,4 +1,4 @@
-﻿namespace Predica.Costkiller.Core.Model.Requests
+﻿namespace Predica.CostkillerLib.Model.Requests.Generated
 {
     /// <remarks/>
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]

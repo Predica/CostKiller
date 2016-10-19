@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
-namespace Predica.Costkiller.Core.Model.Responses
+namespace Predica.CostkillerLib.Model.Responses
 {
     [XmlRoot("response")]
     public class BaseResponse

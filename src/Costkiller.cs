@@ -6,23 +6,32 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using Predica.Costkiller.Core.Diagnostics;
-using Predica.Costkiller.Core.Extensions;
-using Predica.Costkiller.Core.Model.Entities;
-using Predica.Costkiller.Core.Model.Entities.CostkillerXml;
-using Predica.Costkiller.Core.Model.Entities.CostkillerXml.document;
-using Predica.Costkiller.Core.Model.Enums;
-using Predica.Costkiller.Core.Model.Exceptions;
-using Predica.Costkiller.Core.Model.Requests;
-using Predica.Costkiller.Core.Model.Responses;
+using Predica.CostkillerLib.Diagnostics;
+using Predica.CostkillerLib.Extensions;
+using Predica.CostkillerLib.Model.Entities;
+using Predica.CostkillerLib.Model.Entities.CostkillerXml;
+using Predica.CostkillerLib.Model.Entities.CostkillerXml.allocation;
+using Predica.CostkillerLib.Model.Enums;
+using Predica.CostkillerLib.Model.Exceptions;
+using Predica.CostkillerLib.Model.Interfaces;
+using Predica.CostkillerLib.Model.Requests;
+using Predica.CostkillerLib.Model.Responses;
 
-namespace Predica.Costkiller.Core
+namespace Predica.CostkillerLib
 {
     /// <summary>
     /// Costkiller API Client
     /// </summary>
     public class Costkiller : IDisposable
     {
+        /// <summary>
+        /// Gets or sets the data source that contains information needed to create a budget line
+        /// </summary>
+        public IDataSource DataSource { get; set; }
+        /// <summary>
+        /// Get or sets the logger for this object
+        /// </summary>
+        public ILogger Logger { get; set; }
 
         #region Constructors
         /// <summary>
@@ -92,11 +101,11 @@ namespace Predica.Costkiller.Core
         }
 
         #endregion
-        
+
         #region Projects
 
         /// <summary>
-        /// Adds new project to the project list in the budget menu
+        /// CK_API_BUDGET_PROJ_ADD - Adds new project to the project list in the budget menu
         /// </summary>
         public async Task<BaseResponse> ProjectAdd(Project project)
         {
@@ -114,7 +123,7 @@ namespace Predica.Costkiller.Core
         }
 
         /// <summary>
-        /// Deactivates a project from the budget line
+        /// CK_API_BUDGET_PROJ_DELETE - Deactivates a project from the budget line
         /// </summary>
         /// <param name="projectName">Costkiller's symbol</param>
         /// <returns></returns>
@@ -138,7 +147,7 @@ namespace Predica.Costkiller.Core
 
         #region Budget Lines
         /// <summary>
-        /// Will create all budget lines combinations (of Cost origin / line of business) for given project symbol
+        /// CK_API_BUDGET_SYMBOL_ADD - Will create all budget lines combinations (of Cost origin / line of business) for given project symbol. You have to configure Costkiller.DataSource for this action
         /// </summary>
         /// <param name="projectName">Costkiller's symbol</param>
         public async Task AddBudgetLines(string projectName)
@@ -146,15 +155,15 @@ namespace Predica.Costkiller.Core
             const string method = "CK_API_BUDGET_SYMBOL_ADD";
             if (projectName.Length > 45)
                 throw new ArgumentOutOfRangeException(nameof(projectName), projectName, "Project name cannot be longer than 45 characters");
-            if (Config.DataSource == null)
-                throw new ArgumentNullException(nameof(Config.DataSource), "Config.DataStore is null. Please set your IDataSource before adding budget lines.");
+            if (DataSource == null)
+                throw new ArgumentNullException(nameof(DataSource), $"{nameof(Costkiller)}.{nameof(DataSource)} is null. Please set your {nameof(IDataSource)} before adding budget lines.");
 
-            foreach (var costOrigin in Config.DataSource.CostOrigins)
+            foreach (var costOrigin in DataSource.CostOrigins)
             {
-                foreach (var lineOfBusiness in Config.DataSource.LineOfBusinesses)
+                foreach (var lineOfBusiness in DataSource.LineOfBusinesses)
                 {
                     var tempProject = new Project() { Name = projectName };
-                    var budgetLine = new NewBudgetLine(_companyId, lineOfBusiness, costOrigin, tempProject, String.Empty);
+                    var budgetLine = new NewBudgetLine(Logger, _companyId, lineOfBusiness, costOrigin, tempProject, String.Empty);
 
                     string payload = budgetLine.ToXmlString();
                     var response = await Client.GetAsync(GetUrl(method, payload));
@@ -173,7 +182,7 @@ namespace Predica.Costkiller.Core
 
         #region Documents
         /// <summary>
-        /// Gets single document
+        /// CK_API_DOC_GET - Gets single document
         /// </summary>
         /// <param name="id">Document ID</param>
         /// <returns>Document object</returns>
@@ -186,7 +195,11 @@ namespace Predica.Costkiller.Core
             return doc;
         }
 
-        public async Task<List<Document>> SearchDocuments(int monthFrom = 1, int monthTo = 12, int? year = null, DateType dateType = DateType.doc_book_date, DocumentType docType = DocumentType.Unknown)
+        /// <summary>
+        /// CK_API_DOC_SEARCH - Download all documents using selected filters
+        /// </summary>
+        /// <param name="year">Defaults to current year</param>
+        public async Task<List<Document>> SearchDocuments(int monthFrom = 1, int monthTo = 12, int? year = null, DateType dateType = DateType.doc_book_date, DocumentType docType = DocumentType.AllTypes)
         {
             //consts
             const int pageSize = 50;
@@ -202,7 +215,7 @@ namespace Predica.Costkiller.Core
 
             //optional tags initialization
             string docTypeTag = string.Empty;
-            if (docType != DocumentType.Unknown)
+            if (docType != DocumentType.AllTypes)
                 docTypeTag = $"<doc_type>{docType.ToDocType()}</doc_type>";
 
             //deftault variables initalization
@@ -256,6 +269,11 @@ namespace Predica.Costkiller.Core
         #endregion
 
         #region Allocations
+        /// <summary>
+        /// CK_API_ALLOCATIONS_SEARCH - Will download all alocations from desired date range
+        /// </summary>
+        /// <param name="year">Defaults to current year</param>
+        /// <returns></returns>
         public async Task<List<Allocation>> GetAllocations(int monthFrom = 1, int monthTo = 12, int? year = null)
         {
             const string method = "CK_API_ALLOCATIONS_SEARCH";
@@ -271,7 +289,14 @@ namespace Predica.Costkiller.Core
             return allocationsHolder.Allocations;
         }
         #endregion
-
+        /// <summary>
+        /// CK_API_CONTRACTOR_SEARCH - Will download all contractors with selected filters
+        /// </summary>
+        /// <param name="category">Either a contractor or an employee</param>
+        /// <param name="nip">Numer identyfikacji podatkowej</param>
+        /// <param name="pesel">Personal ID number</param>
+        /// <param name="contractorExternalId"></param>
+        /// <param name="onlyNotImported"></param>
         public async Task<List<DocumentContractor>> SearchContractors(ContractorCategory category = ContractorCategory.Contractor, string nip = null, string pesel = null, string contractorExternalId = null, bool? onlyNotImported = null)
         {
             const string method = "CK_API_CONTRACTOR_SEARCH";
@@ -351,9 +376,9 @@ namespace Predica.Costkiller.Core
         #endregion
         public HttpClient Client => _client ?? (_client = CreateClient());
 
-        public void Dispose()
-        {
-            _client?.Dispose();
-        }
+        /// <summary>
+        /// Disposes this object
+        /// </summary>
+        public void Dispose() => _client?.Dispose();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Predica.Costkiller.Core
+namespace Predica.CostkillerLib
 {
     /// <summary>
     /// Connection string handler that exposes properties like Address, API Key and Company ID

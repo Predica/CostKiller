@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using Predica.Costkiller.Core.Model.Exceptions;
+using Predica.CostkillerLib.Model.Exceptions;
 
-namespace Predica.Costkiller.Core.Extensions
+namespace Predica.CostkillerLib.Extensions
 {
     public static class HttpExtensions
     {

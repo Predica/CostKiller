@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Predica.Costkiller.Core.Model.Enums;
-using Predica.Costkiller.Core.Model.Interfaces;
+﻿using Predica.CostkillerLib.Model.Enums;
+using Predica.CostkillerLib.Model.Interfaces;
 
-namespace Predica.Costkiller.Core.Model.Entities
+namespace Predica.CostkillerLib.Model.Entities
 {
     /// <summary>
     /// LOB

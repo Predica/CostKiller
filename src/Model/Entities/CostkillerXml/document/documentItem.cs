@@ -1,4 +1,4 @@
-namespace Predica.Costkiller.Core.Model.Entities.CostkillerXml
+namespace Predica.CostkillerLib.Model.Entities.CostkillerXml
 {
     /// <remarks/>
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]

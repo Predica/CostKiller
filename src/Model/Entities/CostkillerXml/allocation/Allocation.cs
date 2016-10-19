@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using Predica.Costkiller.Core.Model.Entities.CostkillerXml.allocation;
 
-namespace Predica.Costkiller.Core.Model.Entities.CostkillerXml
+namespace Predica.CostkillerLib.Model.Entities.CostkillerXml.allocation
 {
     [XmlRoot("allocation")]
     public class Allocation

@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Predica.Costkiller.Core.Model.Exceptions
+namespace Predica.CostkillerLib.Model.Exceptions
 {
     class SerializerException : Exception
     {

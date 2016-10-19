@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Predica.Costkiller.Core.Model.Entities;
-using Predica.Costkiller.Core.Model.Interfaces;
+using Predica.CostkillerLib.Model.Entities;
+using Predica.CostkillerLib.Model.Interfaces;
 
-namespace Predica.Costkiller.Core.Model.Requests
+namespace Predica.CostkillerLib.Model.Requests
 {
     public class NewBudgetLine : ICostkillerObject
     {
@@ -16,7 +12,7 @@ namespace Predica.Costkiller.Core.Model.Requests
         private const string descriptionBody = "<description>{0}</description>";
         private const string bodyEnd = "</budget></budgets></request>";
 
-        public NewBudgetLine(int companyId, LineOfBusiness lob, CostOrigin mpk, Project proj,
+        public NewBudgetLine(ILogger logger, int companyId, LineOfBusiness lob, CostOrigin mpk, Project proj,
             string description = null, int? year = null)
         {
             this._companyId = companyId;
@@ -33,7 +29,7 @@ namespace Predica.Costkiller.Core.Model.Requests
                 _proj.Name);
             if (_symbolName.Length > 45)
             {
-                Config.Logger?.LogWarning($"\nSymbol name \"{_symbolName}\" is longer than 45 characters - truncating...");
+                logger?.LogWarning($"\nSymbol name \"{_symbolName}\" is longer than 45 characters - truncating...");
                 _symbolName = _symbolName.Substring(0, 45);
             }
 

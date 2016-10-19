@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Xml;
 using System.Xml.Serialization;
-using Predica.Costkiller.Core.Model.Enums;
+using Predica.CostkillerLib.Model.Enums;
 
-namespace Predica.Costkiller.Core.Model.Entities.CostkillerXml
+namespace Predica.CostkillerLib.Model.Entities.CostkillerXml
 {
     /// <remarks/>
     [XmlRoot("document")]

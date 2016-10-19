@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Predica.Costkiller.Core.Model.Entities
+﻿namespace Predica.CostkillerLib.Model.Entities
 {
     public enum DateType
     {

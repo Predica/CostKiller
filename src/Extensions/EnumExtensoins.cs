@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Predica.Costkiller.Core.Model.Enums;
+﻿using Predica.CostkillerLib.Model.Enums;
 
-namespace Predica.Costkiller.Core.Extensions
+namespace Predica.CostkillerLib.Extensions
 {
     public static class EnumExtensoins
     {

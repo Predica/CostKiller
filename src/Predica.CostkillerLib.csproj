@@ -7,8 +7,8 @@
     <ProjectGuid>{493079F8-E885-4FC7-B20D-841D0F1A611A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Predica.Costkiller.Core</RootNamespace>
-    <AssemblyName>Predica.Costkiller.Core</AssemblyName>
+    <RootNamespace>Predica.CostkillerLib</RootNamespace>
+    <AssemblyName>Predica.CostkillerLib</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -24,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Predica.CostkillerLib.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Predica.CostkillerLib.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug-PROD|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -62,7 +64,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config.cs" />
     <Compile Include="ConfigStore.cs" />
     <Compile Include="Costkiller.cs" />
     <Compile Include="Diagnostics\RequestCountHandler.cs" />

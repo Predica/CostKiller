@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Predica.Costkiller.Core.Model.Responses;
+using Predica.CostkillerLib.Model.Responses;
 
-namespace Predica.Costkiller.Core.Model.Exceptions
+namespace Predica.CostkillerLib.Model.Exceptions
 {
     public class CostkillerException : Exception
     {
