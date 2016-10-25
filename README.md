@@ -13,8 +13,8 @@ This library helps you use CostKiller API from .NET project
  - CK_API_CONTRACTOR_SEARCH
 
 ### What's new
-
-- 1.2 - Initial open-sourced release
+- 1.0 - Initial release
+- 1.2 - Open-source release: Refactored code, added comments
 
 ## How to use
 
