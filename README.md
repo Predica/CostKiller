@@ -40,7 +40,7 @@ This library helps you use CostKiller API from .NET project
     - Unit Tests
 
 #### License
-MIT/BSD
+BSD
 
 #### Other
 Maintained by Predica Sp z. o.o.
