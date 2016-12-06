@@ -27,7 +27,7 @@ This library helps you use CostKiller API from .NET project
     //Searching documents
     var documents = costkiller.SearchDocuments();
     //Adding budget lines
-    // - FirstYour assign your object that implements IDataSource
+    // - Assign your object that implements IDataSource
     costkiller.DataSource = new MyDataSource(); 
     costkiller.AddBudgetLines("MyProject");
 ```
